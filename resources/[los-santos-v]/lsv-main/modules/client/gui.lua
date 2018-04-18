@@ -53,6 +53,23 @@ function Gui.DisplayNotification(text, pic, title, subtitle, icon)
 end
 
 
+function Gui.DisplaySkillNotification(skillName, statHash, newValue)
+	local _, oldValue = StatGetInt(statHash, -1)
+	if newValue == oldValue then return end
+
+	local playerHeadshot = Streaming.RegisterPedHeadshot(PlayerPedId())
+
+	SetNotificationTextEntry("STRING")
+	AddTextComponentSubstringPlayerName(newValue.."/100")
+	AddTextEntry("NTF_SKILL", skillName.." +")
+
+	local playerHeadshotTxd = GetPedheadshotTxdString(playerHeadshot)
+	Citizen.InvokeNative(0x2B7E9A4EAAA93C89, "NTF_SKILL", 23, newValue, oldValue, false, playerHeadshotTxd, playerHeadshotTxd)
+
+	UnregisterPedheadshot(playerHeadshot)
+end
+
+
 function Gui.DrawRect(position, width, height, color)
 	DrawRect(position.x, position.y, width, height, color.r, color.g, color.b, color.a)
 end

@@ -18,13 +18,22 @@ Player.crewMembers = { } -- { serverPlayerId }
 
 local logger = Logger:CreateNamedLogger('Player')
 
+local skillNames = {
+	['MP0_LUNG_CAPACITY'] = 'Lung Capacity',
+	['MP0_STAMINA'] = 'Stamina',
+	['MP0_STRENGTH'] = 'Strength',
+	['MP0_SHOOTING_ABILITY'] = 'Shooting',
+}
+
 local function setStat(statName, value, notify)
 	if not value or type(value) ~= 'number' or value < 0 or value > 100 then
 		logger:Error('Attempt to set invalid stat value: '..logger:ToString(value))
 		return
 	end
 
-	StatSetInt(GetHashKey(statName), value, true)
+	local statHash = GetHashKey(statName)
+	StatSetInt(statHash, value, true)
+	if notify then Gui.DisplaySkillNotification(skillNames[statName], statHash, value) end
 end
 
 

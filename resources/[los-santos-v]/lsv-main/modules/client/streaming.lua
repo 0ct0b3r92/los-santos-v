@@ -3,8 +3,8 @@ Streaming = { }
 
 local logger = Logger:CreateNamedLogger('Streaming')
 
-local function is_valid_hash(value, hash, funcName)
-	if hash ~= 0 then return true end
+local function is_valid_id(value, funcName)
+	if value ~= 0 then return true end
 	logger:Error('Unable to '..funcName..': '..logger:ToString(value))
 	return false
 end
@@ -29,7 +29,7 @@ end
 function Streaming.RequestModel(model)
 	local hash = GetHashKey(model)
 	
-	if not is_valid_hash(model, hash, 'RequestModel') then return end
+	if not is_valid_id(hash, 'RequestModel') then return end
 
 	if not HasModelLoaded(hash) then
 		RequestModel(hash)
@@ -55,4 +55,20 @@ function Streaming.RequestNamedPtfxAsset(assetName)
 		RequestNamedPtfxAsset(assetName)
 		while not HasNamedPtfxAssetLoaded(assetName) do Citizen.Wait(0) end
 	end
+end
+
+
+function Streaming.RegisterPedHeadshot(ped)
+	if not is_valid_id(ped, 'RegisterPedHeadshot') then return end
+
+	local headshot = RegisterPedheadshot(ped)
+
+	if not IsPedheadshotValid(headshot) then
+		logger:Error('Unable to RegisterPedHeadshot: '..logger:ToString(headshot))
+		return nil
+	end
+
+	while not IsPedheadshotReady(headshot) do Citizen.Wait(0) end
+
+	return headshot
 end
