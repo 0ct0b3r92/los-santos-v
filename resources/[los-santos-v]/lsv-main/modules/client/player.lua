@@ -25,7 +25,43 @@ local function setStat(statName, value, notify)
 	end
 
 	StatSetInt(GetHashKey(statName), value, true)
-	-- TODO Add notification if necessary
+end
+
+
+function Player.SetLungCapacity(value, notify)
+	setStat('MP0_LUNG_CAPACITY', value, notify)
+end
+
+
+function Player.SetStamina(value, notify)
+	setStat('MP0_STAMINA', value, notify)
+end
+
+
+function Player.SetStrength(value, nofity)
+	setStat('MP0_STRENGTH', value, notify)
+end
+
+
+function Player.SetShootingAbility(value, notify)
+	setStat('MP0_SHOOTING_ABILITY', value, notify)
+end
+
+
+function Player.Init(playerData)
+	Player.serverId = GetPlayerServerId(PlayerId())
+	Player.cash = playerData.Cash
+	Player.kills = playerData.Kills
+	Player.deaths = playerData.Deaths
+
+	Skin.ChangePlayerSkin(playerData.SkinModel)
+
+	Player.SetLungCapacity(playerData.LungCapacity)
+	Player.SetStamina(playerData.Stamina)
+	Player.SetStrength(playerData.Strength)
+	Player.SetShootingAbility(playerData.ShootingAbility)
+
+	Player.GiveWeapons(playerData.Weapons)
 end
 
 
@@ -132,34 +168,6 @@ function Player.SetFreeze(freeze)
 	SetPlayerInvincible(PlayerId(), freeze)
 
 	Player.isFreeze = freeze
-end
-
-
-function Player.SetLungCapacity(value, notify)
-	setStat('MP0_LUNG_CAPACITY', value, notify)
-end
-
-
-function Player.SetStamina(value, notify)
-	setStat('MP0_STAMINA', value, notify)
-end
-
-
-function Player.SetStrength(value, nofity)
-	setStat('MP0_STRENGTH', value, notify)
-end
-
-
-function Player.SetShootingAbility(value, notify)
-	setStat('MP0_SHOOTING_ABILITY', value, notify)
-end
-
-
-function Player.InitSkills(skills)
-	Player.SetLungCapacity(skills.LungCapacity)
-	Player.SetStamina(skills.Stamina)
-	Player.SetStrength(skills.Strength)
-	Player.SetShootingAbility(skills.ShootingAbility)
 end
 
 
