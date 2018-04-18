@@ -30,6 +30,8 @@ AddEventHandler('lsv:playerLoaded', function(playerData, isRegistered)
 	Player.kills = playerData.Kills
 	Player.deaths = playerData.Deaths
 
+	Player.InitSkills(playerData)
+
 	Player.GiveWeapons(playerData.Weapons)
 
 	Player.SetFreeze(false)

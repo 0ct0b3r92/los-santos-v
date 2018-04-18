@@ -16,6 +16,19 @@ Player.deaths = 0
 Player.crewMembers = { } -- { serverPlayerId }
 
 
+local logger = Logger:CreateNamedLogger('Player')
+
+local function setStat(statName, value, notify)
+	if not value or type(value) ~= 'number' or value < 0 or value > 100 then
+		logger:Error('Attempt to set invalid stat value: '..logger:ToString(value))
+		return
+	end
+
+	StatSetInt(GetHashKey(statName), value, true)
+	-- TODO Add notification if necessary
+end
+
+
 function Player.ServerId()
 	return Player.serverId
 end
@@ -119,6 +132,34 @@ function Player.SetFreeze(freeze)
 	SetPlayerInvincible(PlayerId(), freeze)
 
 	Player.isFreeze = freeze
+end
+
+
+function Player.SetLungCapacity(value, notify)
+	setStat('MP0_LUNG_CAPACITY', value, notify)
+end
+
+
+function Player.SetStamina(value, notify)
+	setStat('MP0_STAMINA', value, notify)
+end
+
+
+function Player.SetStrength(value, nofity)
+	setStat('MP0_STRENGTH', value, notify)
+end
+
+
+function Player.SetShootingAbility(value, notify)
+	setStat('MP0_SHOOTING_ABILITY', value, notify)
+end
+
+
+function Player.InitSkills(skills)
+	Player.SetLungCapacity(skills.LungCapacity)
+	Player.SetStamina(skills.Stamina)
+	Player.SetStrength(skills.Strength)
+	Player.SetShootingAbility(skills.ShootingAbility)
 end
 
 
