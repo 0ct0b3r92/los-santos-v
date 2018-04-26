@@ -19,6 +19,8 @@ local tableKillsWidth = 0.1
 local tableDeathsWidth = 0.1
 local tableTextHorizontalMargin = 0.003
 local onlineStatusWidth = 0.003
+local rankWidth = 0.023
+local rankBackgroundWidth = 0.025
 
 local headerScale = 0.35
 local positionScale = 0.5
@@ -27,6 +29,7 @@ local cashScale = 0.35
 local kdRatioScale = 0.35
 local killsScale = 0.35
 local deathsScale = 0.35
+local rankScale = 0.5
 
 local scoreboardPosition = { ['x'] = (1.0 - tablePositionWidth - tableCashWidth - tableKdRatioWidth - tableKillsWidth - tableDeathsWidth) / 2, ['y'] = 0.1 }
 
@@ -37,9 +40,9 @@ local tableHeaderTextColor = { ['r'] = 255, ['g'] = 255, ['b'] = 255, ['a'] = 25
 
 local tablePositionTextColor = { ['r'] = 255, ['g'] = 255, ['b'] = 255, ['a'] = 255 }
 
-local tablePositionRankBackgroundColor = { ['r'] = 0, ['g'] = 0, ['b'] = 0, ['a'] = 255 }
-local tablePositionRankColor = { ['r'] = 63, ['g'] = 81, ['b'] = 181, ['a'] = 255 }
-local tablePositionRankTextColor = { ['r'] = 255, ['g'] = 255, ['b'] = 255, ['a'] = 255 }
+local tableRankColor = { ['r'] = 255, ['g'] = 255, ['b'] = 255, ['a'] = 255 }
+local tableRankBackgroundColor = { ['r'] = 0, ['g'] = 0, ['b'] = 0, ['a'] = 255 }
+local tableRankImageColor = { ['r'] = 44, ['g'] = 109, ['b'] = 184, ['a'] = 255 }
 
 local tableCashColor = { ['r'] = 0, ['g'] = 0, ['b'] = 0, ['a'] = 160 }
 local tableCashTextColor = { ['r'] = 255, ['g'] = 255, ['b'] = 255, ['a'] = 255 }
@@ -105,12 +108,13 @@ function Scoreboard.DisplayThisFrame()
 
 	-- Draw table
 	local tablePosition = { ['y'] = tablePositionHeader.y + tableHeight + headerTableSpacing }
-	local tableAvatarPositionWidth = (tableHeight * 9 / 16)
+	local tableAvatarPositionWidth = tableHeight * 9 / 16
 
 	for index = 1, math.min(Settings.scoreboardMaxPlayers, Utils.GetTableLength(scoreboard)) do
 		local avatarPosition = { ['x'] = scoreboardPosition.x + tableAvatarPositionWidth / 2, ['y'] = tablePosition.y }
 		local playerPosition = { ['x'] = avatarPosition.x + tablePositionWidth / 2, ['y'] = tablePosition.y }
 		local onlineStatusPosition = { ['x'] = avatarPosition.x + tableAvatarPositionWidth / 2 + onlineStatusWidth / 2, ['y'] = tablePosition.y }
+		local rankPosition = { ['x'] = playerPosition.x + tablePositionWidth / 2 - rankWidth + onlineStatusWidth, ['y'] = tablePosition.y + 0.001 }
 		local cashPosition = { ['x'] = tableCashHeader.x, ['y'] = tablePosition.y }
 		local kdRatioPosition = { ['x'] = tableKdRatioHeader.x, ['y'] = tablePosition.y }
 		local killsPosition = { ['x'] = tableKillsHeader.x, ['y'] = tablePosition.y }
@@ -134,6 +138,12 @@ function Scoreboard.DisplayThisFrame()
 
 		-- Draw online status (make it real)
 		Gui.DrawRect(onlineStatusPosition, onlineStatusWidth, tableHeight, onlineStatusColor)
+
+		-- Draw player rank
+		Streaming.RequestStreamedTextureDict('mprankbadge')
+		DrawSprite('mprankbadge', 'globe_bg', rankPosition.x, rankPosition.y, rankBackgroundWidth, rankBackgroundWidth * 16 / 9, 0, tableRankBackgroundColor.r, tableRankBackgroundColor.g, tableRankBackgroundColor.b, tableRankBackgroundColor.a)
+		DrawSprite('mprankbadge', 'globe', rankPosition.x, rankPosition.y, rankWidth, rankWidth * 16 / 9, 0, tableRankImageColor.r, tableRankImageColor.g, tableRankImageColor.b, tableRankImageColor.a)
+		Gui.DrawText(scoreboard[index].rank, { ['x'] = rankPosition.x, ['y'] = tableText.y }, 4, tableRankColor, rankScale, false, false, true)
 
 		-- Draw cash
 		Gui.DrawRect(cashPosition, tableCashWidth, tableHeight, tableCashColor)
