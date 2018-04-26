@@ -10,6 +10,9 @@ local function sortScoreboard(l, r)
 	if l.cash > r.cash then return true end
 	if l.cash < r.cash then return false end
 
+	if l.rank > r.rank then return true end
+	if l.rank < r.rank then return false end
+
 	if not l.kdRatio then return false end
 	if not r.kdRatio then return true end
 
@@ -53,7 +56,7 @@ end
 
 function Scoreboard.AddPlayer(player, playerStats)
 	table.insert(scoreboard, { ['id'] = player, ['name'] = GetPlayerName(player), ['cash'] = playerStats.Cash,
-		['kdRatio'] = calculateKdRatio(playerStats.Kills, playerStats.Deaths),
+		['rank'] = playerStats.Rank, ['kdRatio'] = calculateKdRatio(playerStats.Kills, playerStats.Deaths),
 		['kills'] = playerStats.Kills, ['deaths'] = playerStats.Deaths, ['killstreak'] = 0 })
 
 	updateScoreboard()
@@ -105,6 +108,26 @@ function Scoreboard.GetPlayerKills(player)
 	if not playerIndex then return end
 
 	return scoreboard[playerIndex].kills
+end
+
+
+function Scoreboard.GetPlayerRank(player)
+	local playerIndex = findPlayerIndex(player)
+
+	if not playerIndex then return end
+
+	return scoreboard[playerIndex].rank
+end
+
+
+function Scoreboard.UpdateRank(player)
+	local playerIndex = findPlayerIndex(player)
+
+	if not playerIndex then return end
+
+	scoreboard[playerIndex].rank = scoreboard[playerIndex].rank + 1
+
+	updateScoreboard()
 end
 
 

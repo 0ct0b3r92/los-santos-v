@@ -8,6 +8,7 @@ Player.serverId = nil
 
 Player.skin = nil
 
+Player.rank = 0
 Player.cash = 0
 Player.killstreak = 0
 Player.kills = 0
@@ -59,6 +60,8 @@ end
 
 function Player.Init(playerData)
 	Player.serverId = GetPlayerServerId(PlayerId())
+
+	Player.rank = playerData.Rank
 	Player.cash = playerData.Cash
 	Player.kills = playerData.Kills
 	Player.deaths = playerData.Deaths

@@ -51,6 +51,15 @@ function Db.UpdateDeaths(player, callback)
 end
 
 
+function Db.UpdateRank(player, callback)
+	Db.UpdateNumericValue(player, 'Rank', 1, function()
+		if callback then callback() end
+		Scoreboard.UpdateRank(player)
+		TriggerClientEvent('lsv:rankUpdated', player)
+	end)
+end
+
+
 function Db.FindPlayer(player, callback)
 	MySQL.ready(function()
 		MySQL.Async.fetchAll('SELECT * FROM Players WHERE PlayerID=@playerId', { ['@playerId'] = GetPlayerIdentifiers(player)[1] }, function(data)
