@@ -77,6 +77,7 @@ AddEventHandler('lsv:updateScoreboard', function(serverScoreboard)
 			table.remove(scoreboard, i)
 		else
 			scoreboard[i].id = id
+			scoreboard[i].headshot = GetPedheadshotTxdString(Streaming.RegisterPedHeadshot(GetPlayerPed(id)))
 		end
 	end
 end)
@@ -85,7 +86,6 @@ end)
 function Scoreboard.DisplayThisFrame()
 	-- Draw "POSITION" header
 	Gui.DrawRect(tablePositionHeader, tablePositionWidth, tableHeight, tableHeaderColor)
-	Gui.DrawText("POSITION", { ['x'] = tablePositionHeader.x, ['y'] = tableHeaderText.y }, 0, tableHeaderTextColor, headerScale, false, false, true)
 
 	-- Draw "CASH" header
 	Gui.DrawRect(tableCashHeader, tableCashWidth, tableHeight, tableHeaderColor)
@@ -119,8 +119,9 @@ function Scoreboard.DisplayThisFrame()
 
 		-- Draw avatar
 		Gui.DrawRect(avatarPosition, tableAvatarPositionWidth, tableHeight, tableCashColor)
-		Gui.DrawText(index, { ['x'] = avatarPosition.x, ['y'] = tableText.y + 0.004 }, 0, tableCashTextColor, cashScale,
-			false, false, true)-- TODO Draw avatar here!
+		if scoreboard[index].headshot then
+			DrawSprite(scoreboard[index].headshot, scoreboard[index].headshot, avatarPosition.x, tableText.y + tableHeight / 2, tableAvatarPositionWidth, tableHeight, 0, 255, 255, 255, 255)
+		end
 
 		-- Draw player name
 		local playerColor = Player.isCrewMember(GetPlayerServerId(scoreboard[index].id)) and Color.GetHudFromBlipColor(Color.BlipLightBlue()) or Color.GetHudFromBlipColor(Color.BlipDarkBlue())
