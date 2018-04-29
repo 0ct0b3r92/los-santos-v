@@ -68,7 +68,5 @@ function Streaming.RegisterPedHeadshot(ped)
 		return nil
 	end
 
-	while not IsPedheadshotReady(headshot) do Citizen.Wait(0) end
-
 	return headshot
 end

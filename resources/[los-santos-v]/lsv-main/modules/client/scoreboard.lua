@@ -80,7 +80,7 @@ AddEventHandler('lsv:updateScoreboard', function(serverScoreboard)
 			table.remove(scoreboard, i)
 		else
 			scoreboard[i].id = id
-			scoreboard[i].headshot = GetPedheadshotTxdString(Streaming.RegisterPedHeadshot(GetPlayerPed(id)))
+			scoreboard[i].headshot = Streaming.RegisterPedHeadshot(GetPlayerPed(id))
 		end
 	end
 end)
@@ -123,8 +123,9 @@ function Scoreboard.DisplayThisFrame()
 
 		-- Draw avatar
 		Gui.DrawRect(avatarPosition, tableAvatarPositionWidth, tableHeight, tableCashColor)
-		if scoreboard[index].headshot then
-			DrawSprite(scoreboard[index].headshot, scoreboard[index].headshot, avatarPosition.x, tableText.y + tableHeight / 2, tableAvatarPositionWidth, tableHeight, 0, 255, 255, 255, 255)
+		if IsPedheadshotReady(scoreboard[index].headshot) then
+			local headshotTxd = GetPedheadshotTxdString(scoreboard[index].headshot)
+			DrawSprite(headshotTxd, headshotTxd, avatarPosition.x, tableText.y + tableHeight / 2, tableAvatarPositionWidth, tableHeight, 0, 255, 255, 255, 255)
 		end
 
 		-- Draw player name
